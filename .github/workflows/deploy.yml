@@ -1,0 +1,30 @@
+name: Backend Deploy (Self-hosted)
+
+on:
+  push:
+    branches: [ main ]   # deploy on pushes to main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    name: Deploy to Azure VM (self-hosted)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'   # choose LTS
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: /home/rupeena/final-backend/   # modify if backend in subfolder
+
+      - name: Build (if you have build step)
+        run: npm run build || echo "no build"
+
+      - name: Stop and start via pm2
+        run: |
+          pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+        shell: bash
