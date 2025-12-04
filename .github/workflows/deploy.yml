@@ -5,7 +5,10 @@ on:
     branches:
       - main
     paths:
-      - "final-backend/**"
+      - "**/*.js"
+      - "package.json"
+      - "package-lock.json"
+      - "server/**"
 
 jobs:
   deploy:
